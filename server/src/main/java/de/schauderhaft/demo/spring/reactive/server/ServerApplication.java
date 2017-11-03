@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,15 +32,23 @@ public class ServerApplication {
 	private static class PersonRestController {
 
 		@RequestMapping( method = RequestMethod.POST)
-		Mono<Person> addPerson(String name) {
-			return Mono.just(new Person(name));
+		Mono<Person> addPerson(@RequestBody String name) {
+			System.out.println("Received a person with name " + name);
+			return Mono.just(createPerson(name));
 		}
 
 		@RequestMapping( method = RequestMethod.GET)
 		Flux<Person> persons() {
 
-			System.out.println("list all persons");
-			return Flux.just(new Person("Oliver"), new Person("Mark"), new Person("Christoph")).delayElements(Duration.ofSeconds(1));
+
+			return Flux.just(createPerson("Oliver"), createPerson("Mark"), createPerson("Christoph")).delayElements(Duration.ofSeconds(1));
+		}
+
+		private Person createPerson(String name) {
+
+			Person person = new Person(null);
+			person.setName(name);
+			return person;
 		}
 	}
 
