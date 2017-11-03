@@ -34,6 +34,8 @@ public class ServerApplication {
 
 		@RequestMapping(value = "persons", method = RequestMethod.GET)
 		Flux<Person> persons() {
+
+			System.out.println("list all persons");
 			return Flux.just(new Person("Oliver"), new Person("Mark"), new Person("Christoph"));
 		}
 	}
