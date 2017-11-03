@@ -28,6 +28,7 @@ public class Names {
 
 	private static Random random = new Random();
 
+	// Thanks to https://raw.githubusercontent.com/dominictarr/random-name/master/first-names.txt
 	private static String[] names = {
 			"Aaren",
 			"Aarika",

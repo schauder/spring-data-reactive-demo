@@ -1,9 +1,5 @@
 package de.schauderhaft.demo.spring.reactive.client;
 
-import java.time.Duration;
-
-import org.springframework.web.reactive.function.BodyInserter;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import reactor.core.publisher.Mono;
@@ -14,13 +10,15 @@ public class LoadApplication {
 
 	public static void main(String[] args) {
 
-		client //
-				.post() //
-				.uri(builder -> builder.path("/persons").build()) //
-				.body(Mono.just("Jens"), String.class) //
-				.retrieve() //
-				.bodyToFlux(Person.class) //
-				.doOnNext(System.out::println) //
-				.blockLast(Duration.ofSeconds(1));
+		while (true) {
+			client //
+					.post() //
+					.uri(builder -> builder.path("/persons").build()) //
+					.body(Mono.just(Names.randomName()), String.class) //
+					.retrieve() //
+					.bodyToFlux(Person.class) //
+					.doOnNext(System.out::println) //
+					.blockLast();
+		}
 	}
 }
