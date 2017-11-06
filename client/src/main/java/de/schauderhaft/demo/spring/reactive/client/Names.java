@@ -23,7 +23,7 @@ import java.util.Random;
 public class Names {
 
 	static String randomName() {
-		return names[random.nextInt(names.length)];
+		return names[random.nextInt(20)];
 	}
 
 	private static Random random = new Random();
