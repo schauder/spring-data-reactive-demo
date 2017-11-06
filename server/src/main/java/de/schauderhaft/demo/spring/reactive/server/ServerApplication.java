@@ -4,9 +4,12 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.CollectionOptions;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.Data;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import javax.annotation.PostConstruct;
 
 @SpringBootApplication
 
@@ -29,7 +34,16 @@ public class ServerApplication {
 
 	@RestController
 	@RequestMapping(value = "persons", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+	@RequiredArgsConstructor
 	private static class PersonRestController {
+
+		private final MongoTemplate template;
+
+		@PostConstruct
+		void afterInit(){
+			template.createCollection(Person.class, CollectionOptions.empty().capped().maxDocuments(10000).size(10000));
+		}
+
 
 		@RequestMapping( method = RequestMethod.POST)
 		Mono<Person> addPerson(@RequestBody String name) {
