@@ -24,7 +24,6 @@ import reactor.core.publisher.Mono;
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
-
 public class ServerApplication {
 
 	public static void main(String[] args) {
@@ -41,6 +40,7 @@ public class ServerApplication {
 
 		@PostConstruct
 		void afterInit(){
+		    // this is necessary in order for tailable cursors to work.
 			template.createCollection(Person.class, CollectionOptions.empty().capped().maxDocuments(10000).size(10000));
 		}
 
@@ -53,7 +53,6 @@ public class ServerApplication {
 
 		@RequestMapping( method = RequestMethod.GET)
 		Flux<Person> persons() {
-
 
 			return Flux.just(createPerson("Oliver"), createPerson("Mark"), createPerson("Christoph")).delayElements(Duration.ofSeconds(1));
 		}
